@@ -1,0 +1,26 @@
+#coding in py 4 AEM Team By Pr. Haci ZAKARIA and Dr. Ahmed El Ghini
+import pandas as pd
+import matplotlib.pyplot as plt
+from statsmodels.tsa.stattools import adfuller
+from statsmodels.tsa.arima.model import ARIMA
+
+serie_temporelle = pd.read_csv("serie_temporelle.csv", index_col = 0, parse_dates = [0], squeeze = True)
+#4 having a view of the variable over time
+plt.plot(serie_temporelle)
+
+#stationarity test with (Dickey-Fuller test...)
+#from statsmodels.tsa.stattools import adfuller ==> look at the top it's already used
+_, p, _, _, _, _ = adfuller(serie_temporelle)
+print("La p-value est de: ", round(p, 3))
+
+#Modeing "AR...MA"
+#from statsmodels.tsa.arima.model import ARIMA ==> look at the top it's already used
+arma = ARIMA(serie_temporelle, order=(1,0,3)).fit()
+
+arma.summary()
+
+#check with another way 
+pred = arma.predict()
+plt.figure(figsize=(20,10))
+plt.plot(serie_temporelle)
+plt.plot(pred, color = "r")
